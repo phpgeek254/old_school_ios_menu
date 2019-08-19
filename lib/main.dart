@@ -1,7 +1,8 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:hidden_drawer/restaurant_card.dart';
+import 'package:hidden_drawer/other_screen.dart';
+import 'package:hidden_drawer/restaurant_screen.dart';
+
+import 'menu/menu_list_item.dart';
 
 void main() => runApp(MyApp());
 
@@ -10,7 +11,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'IOS Menu',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -25,58 +26,103 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  var activeScreen = restaurantScreen;
+
+  Widget createMenuItems() => Transform(
+    transform: Matrix4.translationValues(0, 225, 0),
+    child: Column(
+      children: <Widget>[
+        MenuListItem(
+          title: "THE PADDOCK",
+          isSelected: true,
+        ),
+        MenuListItem(
+          title: "THE HERO",
+
+        ),
+        MenuListItem(
+          title: "HELP US GROW",
+        ),
+        MenuListItem(
+          title: "SETTINGS",
+        ),
+      ],
+    ),
+  );
+  Widget createMenuTitle() => Transform(
+        transform: Matrix4.translationValues(
+          -100,
+          0,
+          0,
+        ),
+        child: OverflowBox(
+          maxWidth: double.infinity,
+          alignment: Alignment.topLeft,
+          child: Padding(
+            padding: const EdgeInsets.all(30.0),
+            child: Text(
+              "Menu",
+              style: TextStyle(
+                fontSize: 240,
+                color: Colors.grey[800],
+                fontFamily: 'Mermaid',
+              ),
+              softWrap: false,
+              textAlign: TextAlign.left,
+            ),
+          ),
+        ),
+      );
+  Widget createContentDisplay() => Container(
+        decoration: BoxDecoration(
+          image: activeScreen.screenBackground,
+        ),
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            leading: IconButton(
+              onPressed: () {},
+              icon: Icon(Icons.menu),
+            ),
+            elevation: 0,
+            title: Text(
+              "${activeScreen.screenTitle}",
+              style: TextStyle(
+                fontSize: 25,
+                fontFamily: 'Bebas',
+              ),
+            ),
+          ),
+          body: activeScreen.screenContentBuilder(context),
+        ),
+      );
+
+  Widget createMenuScreen() => Container(
+    width: double.infinity,
+    height: double.infinity,
+    decoration: BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage('images/dark_grunge_bk.jpg'),
+              fit: BoxFit.cover),
+        ),
+    child: Material(
+      color: Colors.transparent,
+      child: Stack(
+            children: <Widget>[
+              createMenuTitle(),
+              createMenuItems(),
+            ],
+          ),
+    ),
+  );
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        image: DecorationImage(
-            image: AssetImage('images/wood_bk.jpg'), fit: BoxFit.cover),
-      ),
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          leading: IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.menu),
-          ),
-          elevation: 0,
-          title: Text(
-            "The Paleo Padlock",
-            style: TextStyle(
-              fontSize: 25,
-              fontFamily: 'Bebas',
-            ),
-          ),
-        ),
-        body: ListView(
-          children: <Widget>[
-            new RestaurantCard(
-              heartCount: Random().nextInt(100),
-              icon: Icons.fastfood,
-              iconBackgroundColor: Colors.red,
-              image: 'images/eggs_in_skillet.jpg',
-              title: 'il domacca',
-              subTitle: "78 5TH AVENUE, NEW YORK",
-            ),
-            new RestaurantCard(
-              image: 'images/steak_on_cooktop.jpg',
-              icon: Icons.local_dining,
-              iconBackgroundColor: Colors.red,
-              title: 'Mc Grady',
-              subTitle: "79 5TH AVENUE, NEW YORK",
-              heartCount: 84,
-            ),
-            new RestaurantCard(
-                image: 'images/spoons_of_spices.jpg',
-                icon: Icons.fastfood,
-                iconBackgroundColor: Colors.purpleAccent,
-                title: 'Sugar & Spice',
-                subTitle: "80 5TH AVENUE, NEW YORK",
-                heartCount: 84),
-          ],
-        ),
-      ),
+    return Stack(
+      children: <Widget>[
+        createMenuScreen(),
+        // createContentDisplay(),
+      ],
     );
   }
 }
